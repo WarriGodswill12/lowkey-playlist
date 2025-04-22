@@ -8,7 +8,8 @@ export default function Logo() {
         alt="Lowkey Lofi"
         width={160}
         height={160}
-        className="rounded-lg shadow-lg hover:scale-105 transition-transform"
+        className="rounded-lg hover:scale-105 transition-transform w-32 h-32 md:w-40 md:h-40"
+        style={{ background: "transparent" }}
       />
     </div>
   )

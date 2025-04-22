@@ -4,11 +4,11 @@ import { useEffect, useState } from "react"
 import Logo from "@/components/logo"
 import LofiPlayer from "@/components/lofi-player"
 import AppLauncher from "@/components/app-launcher"
-import Dock from "@/components/dock"
 import NowPlayingCard from "@/components/now-playing-card"
 import PomodoroWindow from "@/components/pomodoro-window"
 import TodoWindow from "@/components/todo-window"
 import SettingsPanel from "@/components/settings-panel"
+import ChannelSheet from "@/components/channel-sheet"
 import type { Settings, Task, List } from "@/types"
 import { channelsList } from "@/data/channels"
 
@@ -16,10 +16,11 @@ export default function Home() {
   // State variables
   const [player, setPlayer] = useState<any>(null)
   const [currentChannel, setCurrentChannel] = useState("M-4zE2GG87w") // Default channel
-  const [isMuted, setIsMuted] = useState(false)
+  const [isPlaying, setIsPlaying] = useState(true)
   const [isPomodoroVisible, setIsPomodoroVisible] = useState(false)
   const [isTodoVisible, setIsTodoVisible] = useState(false)
   const [isSettingsVisible, setIsSettingsVisible] = useState(false)
+  const [isChannelSheetOpen, setIsChannelSheetOpen] = useState(false)
   const [settings, setSettings] = useState<Settings>({
     pomodoro: 25,
     shortBreak: 5,
@@ -114,7 +115,13 @@ export default function Home() {
     setCurrentChannel(videoId)
     if (player && player.loadVideoById) {
       player.loadVideoById(videoId)
+      setIsPlaying(true)
     }
+  }
+
+  // Toggle play/pause
+  const togglePlay = () => {
+    setIsPlaying(!isPlaying)
   }
 
   // Toggle pomodoro panel
@@ -200,13 +207,44 @@ export default function Home() {
     saveDataToLocalStorage()
   }
 
+  // Add this useEffect to handle touch events for mobile
+  useEffect(() => {
+    // Request permission for notifications on mobile
+    if (typeof window !== "undefined" && "Notification" in window) {
+      Notification.requestPermission()
+    }
+
+    // Prevent page scrolling when interacting with the app on mobile
+    const handleTouchMove = (e: TouchEvent) => {
+      if (isPomodoroVisible || isTodoVisible || isSettingsVisible || isChannelSheetOpen) {
+        // Allow scrolling within components but prevent body scrolling
+        const target = e.target as HTMLElement
+        const isScrollableElement =
+          target.closest(".tasks-list") ||
+          target.closest(".lists-container") ||
+          target.closest(".modal-content") ||
+          target.closest(".channel-sheet-content")
+
+        if (!isScrollableElement) {
+          e.preventDefault()
+        }
+      }
+    }
+
+    document.addEventListener("touchmove", handleTouchMove, { passive: false })
+
+    return () => {
+      document.removeEventListener("touchmove", handleTouchMove)
+    }
+  }, [isPomodoroVisible, isTodoVisible, isSettingsVisible, isChannelSheetOpen])
+
   return (
     <main className="min-h-screen">
       {backgroundElements}
 
       <Logo />
 
-      <LofiPlayer currentChannel={currentChannel} setPlayer={setPlayer} />
+      <LofiPlayer currentChannel={currentChannel} setPlayer={setPlayer} isPlaying={isPlaying} />
 
       <AppLauncher
         isPomodoroVisible={isPomodoroVisible}
@@ -215,9 +253,21 @@ export default function Home() {
         toggleTodoPanel={toggleTodoPanel}
       />
 
-      <Dock currentChannel={currentChannel} onChangeChannel={handleChangeChannel} channelsList={channelsList} />
+      <NowPlayingCard
+        currentChannel={currentChannel}
+        channelsList={channelsList}
+        isPlaying={isPlaying}
+        onTogglePlay={togglePlay}
+        onOpenChannelSheet={() => setIsChannelSheetOpen(true)}
+      />
 
-      <NowPlayingCard currentChannel={currentChannel} channelsList={channelsList} />
+      <ChannelSheet
+        isOpen={isChannelSheetOpen}
+        onClose={() => setIsChannelSheetOpen(false)}
+        currentChannel={currentChannel}
+        onChangeChannel={handleChangeChannel}
+        channelsList={channelsList}
+      />
 
       {isPomodoroVisible && (
         <PomodoroWindow

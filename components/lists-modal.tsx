@@ -51,9 +51,9 @@ export default function ListsModal({
   return (
     <div className="lists-modal fixed inset-0 z-50 flex pointer-events-auto opacity-100">
       <div className="modal-backdrop absolute inset-0 bg-black/50 backdrop-blur-sm z-[-1]" onClick={onClose}></div>
-      <div className="modal-content relative w-[90%] max-w-[400px] max-h-[90vh] mx-auto my-auto bg-[rgba(36,36,56,0.95)] backdrop-blur-md shadow-lg rounded-xl p-6 overflow-y-auto transform-none">
-        <div className="modal-header flex justify-between items-center mb-6">
-          <h2 className="text-purple-500 text-2xl">My Lists</h2>
+      <div className="modal-content relative w-[90%] max-w-[400px] max-h-[90vh] mx-auto my-auto bg-[rgba(36,36,56,0.95)] backdrop-blur-md shadow-lg rounded-xl p-4 md:p-6 overflow-y-auto transform-none">
+        <div className="modal-header flex justify-between items-center mb-4 md:mb-6">
+          <h2 className="text-purple-500 text-xl md:text-2xl">My Lists</h2>
           <button className="close-btn bg-transparent border-none text-white cursor-pointer" onClick={onClose}>
             <svg
               viewBox="0 0 24 24"

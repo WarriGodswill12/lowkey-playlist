@@ -220,7 +220,7 @@ export default function PomodoroWindow({
       <div
         ref={nodeRef}
         id="pomodoro-window"
-        className="mini-window w-[300px] bg-[rgba(46,26,71,0.8)] text-white rounded-2xl p-4 absolute top-5 right-5 z-[1001] backdrop-blur-md border border-white/10 shadow-md select-none"
+        className="mini-window w-[90vw] md:w-[300px] bg-[rgba(46,26,71,0.8)] text-white rounded-2xl p-4 absolute top-16 left-1/2 -translate-x-1/2 md:top-5 md:right-5 md:left-auto md:translate-x-0 z-[99999999] backdrop-blur-md border border-white/10 shadow-md select-none cursor-move"
       >
         <div className="header flex justify-between items-center mb-2.5 cursor-move">
           <div className="header-left flex items-center">

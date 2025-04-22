@@ -110,3 +110,105 @@ input:focus + .slider {
 input:checked + .slider:before {
   transform: translateX(24px);
 }
+
+/* Channel Sheet Animation */
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(100%);
+  }
+}
+
+.slide-up {
+  animation: slideUp 0.3s forwards;
+}
+
+.slide-down {
+  animation: slideDown 0.3s forwards;
+}
+
+/* Mobile Responsive Styles */
+@media (max-width: 640px) {
+  .timer-time {
+    font-size: 2.5rem !important;
+  }
+
+  .timer-display {
+    padding: 2rem 1rem !important;
+    min-height: 100px !important;
+  }
+
+  .control-button.primary {
+    min-width: 5rem !important;
+    padding: 0.5rem 1rem !important;
+  }
+
+  .control-button.secondary {
+    padding: 0.5rem !important;
+  }
+
+  .tasks-list {
+    max-height: 300px !important;
+  }
+
+  .lists-container {
+    max-height: 200px !important;
+  }
+
+  /* Improve touch targets for mobile */
+  .task-checkbox,
+  .edit-task-btn,
+  .list-option-btn,
+  .close-btn {
+    min-width: 24px;
+    min-height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Ensure modals are scrollable on small screens */
+  .modal-content {
+    overflow-y: auto;
+  }
+
+  /* Make form inputs more touch-friendly */
+  input,
+  select,
+  textarea,
+  button {
+    font-size: 16px !important; /* Prevents iOS zoom on focus */
+  }
+}
+
+/* Ensure the YouTube player is responsive */
+#lofi-player {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* Improve draggable behavior on touch devices */
+.react-draggable {
+  touch-action: none;
+  cursor: move;
+}
+
+/* Ensure the draggable handle is properly styled */
+.header,
+.app-header {
+  cursor: move;
+}

@@ -6,11 +6,13 @@ import Script from "next/script"
 interface LofiPlayerProps {
   currentChannel: string
   setPlayer: (player: any) => void
+  isPlaying: boolean
 }
 
-export default function LofiPlayer({ currentChannel, setPlayer }: LofiPlayerProps) {
+export default function LofiPlayer({ currentChannel, setPlayer, isPlaying }: LofiPlayerProps) {
   const playerRef = useRef<HTMLDivElement>(null)
   const youtubeApiLoaded = useRef(false)
+  const playerInstance = useRef<any>(null)
 
   useEffect(() => {
     // Define the YouTube API callback
@@ -24,6 +26,16 @@ export default function LofiPlayer({ currentChannel, setPlayer }: LofiPlayerProp
       initializePlayer()
     }
   }, [])
+
+  useEffect(() => {
+    if (playerInstance.current) {
+      if (isPlaying) {
+        playerInstance.current.playVideo()
+      } else {
+        playerInstance.current.pauseVideo()
+      }
+    }
+  }, [isPlaying])
 
   const initializePlayer = () => {
     if (!playerRef.current) return
@@ -46,6 +58,7 @@ export default function LofiPlayer({ currentChannel, setPlayer }: LofiPlayerProp
         onReady: (event: any) => {
           event.target.playVideo()
           setPlayer(event.target)
+          playerInstance.current = event.target
         },
         onStateChange: (event: any) => {
           // If video ends, restart it (for continuous play)

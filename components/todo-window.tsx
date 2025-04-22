@@ -110,13 +110,15 @@ export default function TodoWindow({
       <Draggable nodeRef={nodeRef} bounds="parent" handle=".app-header">
         <div
           ref={nodeRef}
-          className="app-container w-[350px] absolute top-5 left-5 z-[1001] bg-[rgba(46,26,71,0.8)] text-white rounded-2xl backdrop-blur-md border border-white/10 shadow-md p-4"
+          className="app-container w-[90vw] md:w-[350px] absolute top-16 left-1/2 -translate-x-1/2 md:top-5 md:left-5 md:translate-x-0 z-[99999999] bg-[rgba(46,26,71,0.8)] text-white rounded-2xl backdrop-blur-md border border-white/10 shadow-md p-4 cursor-move"
         >
           <header className="app-header flex justify-between items-center mb-6 cursor-move">
             <div className="header-left flex items-center cursor-pointer" onClick={() => setIsListsModalOpen(true)}>
-              <h1 className="app-title text-lg font-medium mr-1">{getActiveListName()}</h1>
+              <h1 className="app-title text-base md:text-lg font-medium mr-1 truncate max-w-[100px] md:max-w-[150px]">
+                {getActiveListName()}
+              </h1>
               <svg
-                className="down-arrow w-4 h-4 stroke-gray-300"
+                className="down-arrow w-4 h-4 stroke-gray-300 flex-shrink-0"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -127,30 +129,30 @@ export default function TodoWindow({
                 <polyline points="6 9 12 15 18 9"></polyline>
               </svg>
             </div>
-            <div className="filter-buttons flex gap-2">
+            <div className="filter-buttons flex gap-1 md:gap-2">
               <button
-                className={`filter-btn bg-transparent border-none text-gray-300 cursor-pointer text-xs py-1 px-2 rounded transition-all duration-200 hover:bg-white/10 ${currentFilter === "all" ? "active bg-purple-500 text-white" : ""}`}
+                className={`filter-btn bg-transparent border-none text-gray-300 cursor-pointer text-xs py-1 px-1 md:px-2 rounded transition-all duration-200 hover:bg-white/10 ${currentFilter === "all" ? "active bg-purple-500 text-white" : ""}`}
                 data-filter="all"
                 onClick={() => onChangeFilter("all")}
               >
                 All
               </button>
               <button
-                className={`filter-btn bg-transparent border-none text-gray-300 cursor-pointer text-xs py-1 px-2 rounded transition-all duration-200 hover:bg-white/10 ${currentFilter === "active" ? "active bg-purple-500 text-white" : ""}`}
+                className={`filter-btn bg-transparent border-none text-gray-300 cursor-pointer text-xs py-1 px-1 md:px-2 rounded transition-all duration-200 hover:bg-white/10 ${currentFilter === "active" ? "active bg-purple-500 text-white" : ""}`}
                 data-filter="active"
                 onClick={() => onChangeFilter("active")}
               >
                 Active
               </button>
               <button
-                className={`filter-btn bg-transparent border-none text-gray-300 cursor-pointer text-xs py-1 px-2 rounded transition-all duration-200 hover:bg-white/10 ${currentFilter === "completed" ? "active bg-purple-500 text-white" : ""}`}
+                className={`filter-btn bg-transparent border-none text-gray-300 cursor-pointer text-xs py-1 px-1 md:px-2 rounded transition-all duration-200 hover:bg-white/10 ${currentFilter === "completed" ? "active bg-purple-500 text-white" : ""}`}
                 data-filter="completed"
                 onClick={() => onChangeFilter("completed")}
               >
                 Completed
               </button>
             </div>
-            <div className="close-btn text-base cursor-pointer" onClick={onClose}>
+            <div className="close-btn text-base cursor-pointer flex-shrink-0" onClick={onClose}>
               ×
             </div>
           </header>

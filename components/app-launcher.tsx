@@ -20,7 +20,10 @@ export default function AppLauncher({
 
   return (
     <Draggable nodeRef={nodeRef} bounds="parent">
-      <div ref={nodeRef} className="app-launcher fixed top-20 right-20 z-[1002] flex flex-col gap-3">
+      <div
+        ref={nodeRef}
+        className="app-launcher fixed top-4 right-4 md:top-20 md:right-20 z-[1002] flex flex-col gap-3"
+      >
         <button
           id="pomodoro-launcher"
           className={`app-button w-[42px] h-[42px] rounded-full bg-purple-500/20 backdrop-blur-md border border-purple-500/30 flex justify-center items-center text-white cursor-pointer transition-all duration-200 shadow-lg hover:scale-110 hover:bg-purple-500/40 ${isPomodoroVisible ? "bg-purple-500" : ""}`}
