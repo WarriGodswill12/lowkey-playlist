@@ -110,7 +110,7 @@ export default function TodoWindow({
       <Draggable nodeRef={nodeRef} bounds="parent" handle=".app-header">
         <div
           ref={nodeRef}
-          className="app-container w-[90vw] md:w-[350px] absolute top-16 left-1/2 -translate-x-1/2 md:top-5 md:left-5 md:translate-x-0 z-[99999999] bg-[rgba(46,26,71,0.8)] text-white rounded-2xl backdrop-blur-md border border-white/10 shadow-md p-4 cursor-move"
+          className="app-container w-[90vw] md:w-[350px] fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 md:absolute md:top-5 md:left-5 md:translate-y-0 z-[99999999] bg-[rgba(46,26,71,0.8)] text-white rounded-2xl backdrop-blur-md border border-white/10 shadow-md p-4 cursor-move"
         >
           <header className="app-header flex justify-between items-center mb-6 cursor-move">
             <div className="header-left flex items-center cursor-pointer" onClick={() => setIsListsModalOpen(true)}>

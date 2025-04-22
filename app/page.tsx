@@ -11,6 +11,7 @@ import SettingsPanel from "@/components/settings-panel"
 import ChannelSheet from "@/components/channel-sheet"
 import type { Settings, Task, List } from "@/types"
 import { channelsList } from "@/data/channels"
+import { Play } from "lucide-react"
 
 export default function Home() {
   // State variables
@@ -121,6 +122,13 @@ export default function Home() {
 
   // Toggle play/pause
   const togglePlay = () => {
+    if (player) {
+      if (isPlaying) {
+        player.pauseVideo()
+      } else {
+        player.playVideo()
+      }
+    }
     setIsPlaying(!isPlaying)
   }
 
@@ -238,6 +246,22 @@ export default function Home() {
     }
   }, [isPomodoroVisible, isTodoVisible, isSettingsVisible, isChannelSheetOpen])
 
+  // Add a useEffect for keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Toggle play/pause with spacebar
+      if (e.code === "Space" && !e.target.matches("input, textarea, [contenteditable]")) {
+        e.preventDefault() // Prevent scrolling
+        togglePlay()
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyDown)
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown)
+    }
+  }, [])
+
   return (
     <main className="min-h-screen">
       {backgroundElements}
@@ -245,6 +269,15 @@ export default function Home() {
       <Logo />
 
       <LofiPlayer currentChannel={currentChannel} setPlayer={setPlayer} isPlaying={isPlaying} />
+
+      {/* Add paused overlay */}
+      {!isPlaying && (
+        <div className="fixed inset-0 flex items-center justify-center z-[1000] pointer-events-none">
+          <div className="bg-black/40 backdrop-blur-sm p-6 rounded-full">
+            <Play className="h-12 w-12 text-white opacity-80" />
+          </div>
+        </div>
+      )}
 
       <AppLauncher
         isPomodoroVisible={isPomodoroVisible}

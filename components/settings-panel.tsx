@@ -27,7 +27,7 @@ export default function SettingsPanel({ settings, onClose, onSave }: SettingsPan
   }
 
   return (
-    <div className="settings-panel fixed inset-0 z-[100] flex items-center justify-center opacity-100 pointer-events-auto">
+    <div className="settings-panel fixed inset-0 z-[99999999] flex items-center justify-center opacity-100 pointer-events-auto">
       <div className="settings-backdrop absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose}></div>
       <div className="settings-content relative max-w-[90%] w-[400px] bg-[#1a1a2e] rounded-xl shadow-lg p-4 md:p-6 transform-none opacity-100 max-h-[90vh] overflow-y-auto">
         <div className="settings-header flex justify-between mb-4 md:mb-6">

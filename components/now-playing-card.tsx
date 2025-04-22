@@ -43,10 +43,10 @@ export default function NowPlayingCard({
           e.stopPropagation()
           onTogglePlay()
         }}
-        className="ml-2 p-1.5 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+        className="ml-2 p-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors"
         aria-label={isPlaying ? "Pause" : "Play"}
       >
-        {isPlaying ? <Pause className="h-3.5 w-3.5" /> : <Play className="h-3.5 w-3.5" />}
+        {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
       </button>
     </div>
   )
