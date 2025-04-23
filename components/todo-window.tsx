@@ -5,6 +5,7 @@ import Draggable from "react-draggable"
 import type { Task, List } from "@/types"
 import ListsModal from "./lists-modal"
 import EditTaskModal from "./edit-task-modal"
+import { Calendar, TriangleAlert } from "lucide-react"
 
 interface TodoWindowProps {
   onClose: () => void
@@ -94,6 +95,23 @@ export default function TodoWindow({
     return formattedDate
   }
 
+  // Check if due date is expired
+  const isDueDateExpired = (dateStr: string, timeStr: string) => {
+    if (!dateStr) return false
+
+    const now = new Date()
+    const dueDate = new Date(dateStr)
+
+    if (timeStr) {
+      const [hours, minutes] = timeStr.split(":").map(Number)
+      dueDate.setHours(hours, minutes)
+    } else {
+      dueDate.setHours(23, 59, 59)
+    }
+
+    return now > dueDate
+  }
+
   // Get active list name
   const getActiveListName = () => {
     const activeList = lists.find((list) => list.id === activeListId)
@@ -105,15 +123,24 @@ export default function TodoWindow({
     return tasks.filter((task) => task.listId === activeListId && !task.completed).length
   }
 
+  // Get active list color
+  const getActiveListColor = () => {
+    const activeList = lists.find((list) => list.id === activeListId)
+    return activeList ? activeList.color : "#9764c7"
+  }
+
   return (
     <>
-      <Draggable nodeRef={nodeRef} bounds="parent" handle=".app-header">
+      <Draggable nodeRef={nodeRef} bounds="parent" defaultPosition={{ x: 20, y: 20 }}>
         <div
           ref={nodeRef}
-          className="app-container w-[90vw] md:w-[350px] fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 md:absolute md:top-5 md:left-5 md:translate-y-0 z-[99999999] bg-[rgba(46,26,71,0.8)] text-white rounded-2xl backdrop-blur-md border border-white/10 shadow-md p-4 cursor-move"
+          className="app-container w-[90vw] md:w-[350px] fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 md:absolute md:top-5 md:left-5 md:translate-y-0 z-[9999] bg-[rgba(46,26,71,0.8)] text-white rounded-2xl backdrop-blur-md border border-white/10 shadow-md p-4 cursor-move"
         >
           <header className="app-header flex justify-between items-center mb-6 cursor-move">
             <div className="header-left flex items-center cursor-pointer" onClick={() => setIsListsModalOpen(true)}>
+              <div className="w-6 h-6 rounded-full bg-[#9764c7] flex items-center justify-center mr-2">
+                <span className="text-xs">{getActiveListName().charAt(0)}</span>
+              </div>
               <h1 className="app-title text-base md:text-lg font-medium mr-1 truncate max-w-[100px] md:max-w-[150px]">
                 {getActiveListName()}
               </h1>
@@ -157,7 +184,7 @@ export default function TodoWindow({
             </div>
           </header>
 
-          <div className="todo-container bg-purple-500/10 border border-purple-500/20 rounded-xl p-6 shadow-lg">
+          <div className="todo-container bg-purple-500/10 border border-purple-500/20 rounded-xl p-4 shadow-lg">
             <div className="add-task-container flex mb-6">
               <input
                 type="text"
@@ -192,7 +219,7 @@ export default function TodoWindow({
               </button>
             </div>
 
-            <div className="tasks-list mb-6 max-h-[400px] overflow-y-auto">
+            <div className="tasks-list mb-6 max-h-[40vh] overflow-y-auto">
               {getFilteredTasks().length === 0 ? (
                 <div className="empty-state text-center py-8 text-gray-300">
                   <p>No tasks found</p>
@@ -203,81 +230,79 @@ export default function TodoWindow({
                   // Get the task's list color
                   const taskList = lists.find((list) => list.id === task.listId) || lists[0]
                   const listColor = taskList.color
+                  const isExpired = isDueDateExpired(task.dueDate, task.dueTime)
 
                   return (
                     <div
                       key={task.id}
-                      className={`task-item flex items-center py-3 border-b border-purple-500/20 ${task.completed ? "completed" : ""}`}
+                      className={`task-item flex flex-col py-3 border-b border-purple-500/20 ${task.completed ? "completed" : ""}`}
                       data-id={task.id}
                     >
-                      <input
-                        type="checkbox"
-                        className="task-checkbox appearance-none w-5 h-5 border-2 border-purple-500 rounded-full mr-3 cursor-pointer relative flex-shrink-0 checked:bg-purple-500"
-                        checked={task.completed}
-                        onChange={() => onToggleTaskCompletion(task.id)}
-                      />
-                      <div className="task-content flex-1 min-w-0">
-                        <div
-                          className={`task-title text-sm whitespace-nowrap overflow-hidden text-ellipsis mb-1 ${task.completed ? "line-through text-gray-300" : ""}`}
-                        >
-                          {task.title}
-                        </div>
-                        {task.dueDate && (
-                          <div className="task-details flex items-center gap-3 text-xs text-gray-300">
-                            <div className="task-due-date inline-flex items-center">
-                              <svg
-                                className="icon w-3 h-3 mr-1"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                              >
-                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                                <line x1="16" y1="2" x2="16" y2="6"></line>
-                                <line x1="8" y1="2" x2="8" y2="6"></line>
-                                <line x1="3" y1="10" x2="21" y2="10"></line>
-                              </svg>
-                              {formatDueDate(task.dueDate, task.dueTime)}
-                            </div>
-                            <div className="task-priority inline-flex items-center">
-                              <span
-                                className={`priority-indicator inline-block w-2 h-2 rounded-full mr-1 ${
-                                  task.priority === "high"
-                                    ? "bg-red-500"
-                                    : task.priority === "medium"
-                                      ? "bg-yellow-500"
-                                      : "bg-blue-500"
-                                }`}
-                              ></span>
-                              {task.priority.charAt(0).toUpperCase() + task.priority.slice(1)}
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                      <div className="task-actions ml-2">
-                        <button
-                          className="edit-task-btn bg-transparent border-none text-gray-300 cursor-pointer p-1 hover:text-purple-500"
-                          onClick={() => {
-                            setCurrentEditTask(task)
-                            setIsEditTaskModalOpen(true)
-                          }}
-                        >
-                          <svg
-                            className="icon w-4 h-4"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
+                      <div className="flex items-center">
+                        <input
+                          type="checkbox"
+                          className="task-checkbox appearance-none w-5 h-5 border-2 border-purple-500 rounded-full mr-3 cursor-pointer relative flex-shrink-0 checked:bg-purple-500"
+                          checked={task.completed}
+                          onChange={() => onToggleTaskCompletion(task.id)}
+                        />
+                        <div className="task-content flex-1 min-w-0">
+                          <div
+                            className={`task-title text-sm whitespace-nowrap overflow-hidden text-ellipsis mb-1 ${task.completed ? "line-through text-gray-300" : ""}`}
                           >
-                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                          </svg>
-                        </button>
+                            {task.title}
+                          </div>
+                        </div>
+                        <div className="task-actions ml-2">
+                          <button
+                            className="edit-task-btn bg-transparent border-none text-gray-300 cursor-pointer p-1 hover:text-purple-500"
+                            onClick={() => {
+                              setCurrentEditTask(task)
+                              setIsEditTaskModalOpen(true)
+                            }}
+                          >
+                            <svg
+                              className="icon w-4 h-4"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            >
+                              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                            </svg>
+                          </button>
+                        </div>
                       </div>
+
+                      {(task.dueDate || task.priority) && (
+                        <div className="task-details flex items-center gap-3 text-xs text-gray-300 mt-1 ml-8">
+                          {task.dueDate && (
+                            <div className="task-due-date inline-flex items-center">
+                              <div className="flex items-center mr-2">
+                                <Calendar className="w-3 h-3 mr-1" />
+                                {formatDueDate(task.dueDate, task.dueTime)}
+                              </div>
+
+                              {isExpired && !task.completed && <TriangleAlert className="w-3 h-3 text-red-500" />}
+                            </div>
+                          )}
+
+                          <div className="task-priority inline-flex items-center">
+                            <span
+                              className={`priority-indicator inline-block w-2 h-2 rounded-full mr-1 ${
+                                task.priority === "high"
+                                  ? "bg-red-500"
+                                  : task.priority === "medium"
+                                    ? "bg-yellow-500"
+                                    : "bg-blue-500"
+                              }`}
+                            ></span>
+                            {task.priority.charAt(0).toUpperCase() + task.priority.slice(1)}
+                          </div>
+                        </div>
+                      )}
                     </div>
                   )
                 })

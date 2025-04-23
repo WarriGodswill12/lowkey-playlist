@@ -9,6 +9,9 @@ const inter = Inter({ subsets: ["latin"] })
 export const metadata: Metadata = {
   title: "Lowkey Lofi: Non-Disruptive Live Lofi Channels",
   description: "Non-disruptive access to 50+ lofi channels",
+  icons: {
+    icon: "/favicon.ico",
+  },
     generator: 'v0.dev'
 }
 

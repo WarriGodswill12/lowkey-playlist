@@ -24,6 +24,7 @@ export default function PomodoroWindow({
   const [isTimerRunning, setIsTimerRunning] = useState(false)
   const [timeLeft, setTimeLeft] = useState(settings.pomodoro * 60)
   const timerIntervalRef = useRef<NodeJS.Timeout | null>(null)
+  const particleIntervalRef = useRef<NodeJS.Timeout | null>(null)
 
   // Timer durations for each mode (in seconds)
   const timerDurations = {
@@ -39,6 +40,9 @@ export default function PomodoroWindow({
     return () => {
       if (timerIntervalRef.current) {
         clearInterval(timerIntervalRef.current)
+      }
+      if (particleIntervalRef.current) {
+        clearInterval(particleIntervalRef.current)
       }
     }
   }, [currentMode, settings])
@@ -82,6 +86,9 @@ export default function PomodoroWindow({
       setIsTimerRunning(false)
       if (timerIntervalRef.current) {
         clearInterval(timerIntervalRef.current)
+      }
+      if (particleIntervalRef.current) {
+        clearInterval(particleIntervalRef.current)
       }
     }
   }
@@ -179,48 +186,55 @@ export default function PomodoroWindow({
 
   // Start particle animation for pomodoro timer
   const startParticleAnimation = () => {
-    if (!isTimerRunning || currentMode !== "pomodoro") return
+    if (!isTimerRunning && currentMode !== "pomodoro") return
 
-    const container = document.getElementById("particles-container")
-    if (!container) return
+    const createParticle = () => {
+      const container = document.getElementById("particles-container")
+      if (!container) return
 
-    // Create particle
-    const particle = document.createElement("div")
-    particle.className = "particle"
+      // Create particle
+      const particle = document.createElement("div")
+      particle.className = "particle"
 
-    // Random position along the bottom
-    const posX = Math.random() * 100
-    particle.style.left = `${posX}%`
+      // Random position along the bottom
+      const posX = Math.random() * 100
+      particle.style.left = `${posX}%`
 
-    // Random size
-    const size = Math.random() * 4 + 2
-    particle.style.width = `${size}px`
-    particle.style.height = `${size}px`
+      // Random size
+      const size = Math.random() * 4 + 2
+      particle.style.width = `${size}px`
+      particle.style.height = `${size}px`
 
-    // Random duration
-    const duration = Math.random() * 2 + 2
-    particle.style.setProperty("--duration", `${duration}s`)
+      // Random duration
+      const duration = Math.random() * 2 + 2
+      particle.style.setProperty("--duration", `${duration}s`)
 
-    // Add to container
-    container.appendChild(particle)
+      // Add to container
+      container.appendChild(particle)
 
-    // Remove after animation completes
-    setTimeout(() => {
-      particle.remove()
-    }, duration * 1000)
-
-    // Create more particles if timer is still running
-    if (isTimerRunning && currentMode === "pomodoro") {
-      setTimeout(startParticleAnimation, Math.random() * 500 + 200)
+      // Remove after animation completes
+      setTimeout(() => {
+        particle.remove()
+      }, duration * 1000)
     }
+
+    // Create initial particle
+    createParticle()
+
+    // Create particles at intervals
+    particleIntervalRef.current = setInterval(() => {
+      if (isTimerRunning && currentMode === "pomodoro") {
+        createParticle()
+      }
+    }, 300)
   }
 
   return (
-    <Draggable nodeRef={nodeRef} bounds="parent" handle=".header">
+    <Draggable nodeRef={nodeRef} bounds="parent" defaultPosition={{ x: 20, y: 20 }}>
       <div
         ref={nodeRef}
         id="pomodoro-window"
-        className="mini-window w-[90vw] md:w-[300px] bg-[rgba(46,26,71,0.8)] text-white rounded-2xl p-4 fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 md:absolute md:top-5 md:right-5 md:left-auto md:translate-y-0 z-[99999999] backdrop-blur-md border border-white/10 shadow-md select-none cursor-move"
+        className="mini-window w-[90vw] md:w-[300px] bg-[rgba(46,26,71,0.8)] text-white rounded-2xl p-4 fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 md:absolute md:top-5 md:right-5 md:left-auto md:translate-y-0 z-[9999] backdrop-blur-md border border-white/10 shadow-md select-none cursor-move"
       >
         <div className="header flex justify-between items-center mb-2.5 cursor-move">
           <div className="header-left flex items-center">
@@ -301,24 +315,27 @@ export default function PomodoroWindow({
         </div>
 
         {/* Timer Tabs */}
-        <div className="timer-tabs flex justify-between border-t border-purple-500/20 pt-4 items-center">
+        <div className="timer-tabs flex border-t border-[#4a2b5c]/30">
           <button
-            className={`tab-button bg-transparent border-none text-gray-300 cursor-pointer text-sm p-2 relative transition-all duration-300 hover:text-purple-300 ${currentMode === "pomodoro" ? "active text-white font-bold" : ""}`}
-            data-mode="pomodoro"
+            className={`flex-1 py-4 text-center text-sm relative transition-all duration-300 ${
+              currentMode === "pomodoro" ? "text-white font-medium border-b-2 border-[#9764c7]" : "text-white/60"
+            }`}
             onClick={() => changeTimerMode("pomodoro")}
           >
             Pomodoro
           </button>
           <button
-            className={`tab-button bg-transparent border-none text-gray-300 cursor-pointer text-sm p-2 relative transition-all duration-300 hover:text-purple-300 ${currentMode === "shortBreak" ? "active text-white font-bold" : ""}`}
-            data-mode="shortBreak"
+            className={`flex-1 py-4 text-center text-sm relative transition-all duration-300 ${
+              currentMode === "shortBreak" ? "text-white font-medium border-b-2 border-[#9764c7]" : "text-white/60"
+            }`}
             onClick={() => changeTimerMode("shortBreak")}
           >
             Short Break
           </button>
           <button
-            className={`tab-button bg-transparent border-none text-gray-300 cursor-pointer text-sm p-2 relative transition-all duration-300 hover:text-purple-300 ${currentMode === "longBreak" ? "active text-white font-bold" : ""}`}
-            data-mode="longBreak"
+            className={`flex-1 py-4 text-center text-sm relative transition-all duration-300 ${
+              currentMode === "longBreak" ? "text-white font-medium border-b-2 border-[#9764c7]" : "text-white/60"
+            }`}
             onClick={() => changeTimerMode("longBreak")}
           >
             Long Break

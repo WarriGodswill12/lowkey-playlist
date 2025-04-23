@@ -49,7 +49,7 @@ export default function ListsModal({
   }
 
   return (
-    <div className="lists-modal fixed inset-0 z-[99999999] flex items-center justify-center pointer-events-auto opacity-100">
+    <div className="lists-modal fixed inset-0 z-[99999] flex items-center justify-center pointer-events-auto opacity-100">
       <div className="modal-backdrop absolute inset-0 bg-black/50 backdrop-blur-sm z-[-1]" onClick={onClose}></div>
       <div className="modal-content relative w-[90%] max-w-[400px] max-h-[90vh] mx-auto bg-[rgba(36,36,56,0.95)] backdrop-blur-md shadow-lg rounded-xl p-4 md:p-6 overflow-y-auto transform-none">
         <div className="modal-header flex justify-between items-center mb-4 md:mb-6">

@@ -6,7 +6,7 @@
   --primary: #9764c7;
   --primary-light: #b78edb;
   --primary-dark: #7e49b6;
-  --background: #1a1a2e;
+  --background: #2a1a3a;
   --text: #ffffff;
   --text-secondary: #cccccc;
   --overlay: rgba(26, 26, 46, 0.7);
@@ -50,52 +50,6 @@ body {
   border-radius: 50%;
   opacity: 0;
   animation: particleRise var(--duration, 3s) ease-out forwards;
-}
-
-/* Tab button active indicator */
-.tab-button.active::after {
-  content: "";
-  position: absolute;
-  bottom: -0.2rem;
-  left: 0;
-  width: 100%;
-  height: 2px;
-  background-color: var(--primary);
-  transform-origin: left;
-  animation: scaleIn 0.3s forwards;
-}
-
-@keyframes scaleIn {
-  0% {
-    transform: scaleX(0);
-  }
-  100% {
-    transform: scaleX(1);
-  }
-}
-
-/* Magic border animation */
-.timer-display::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: var(--border-radius);
-  background: linear-gradient(90deg, var(--primary), #b578e9, var(--primary));
-  opacity: 0.3;
-  z-index: -1;
-  animation: pulse 3s infinite;
-}
-
-@keyframes pulse {
-  0% {
-    opacity: 0.2;
-  }
-  50% {
-    opacity: 0.4;
-  }
-  100% {
-    opacity: 0.2;
-  }
 }
 
 /* Toggle Switch */
@@ -144,11 +98,6 @@ input:checked + .slider:before {
     font-size: 2.5rem !important;
   }
 
-  .timer-display {
-    padding: 2rem 1rem !important;
-    min-height: 100px !important;
-  }
-
   .control-button.primary {
     min-width: 5rem !important;
     padding: 0.5rem 1rem !important;
@@ -190,17 +139,6 @@ input:checked + .slider:before {
   button {
     font-size: 16px !important; /* Prevents iOS zoom on focus */
   }
-
-  /* Ensure windows are properly centered on mobile */
-  .mini-window,
-  .app-container {
-    position: fixed !important;
-    top: 50% !important;
-    left: 50% !important;
-    transform: translate(-50%, -50%) !important;
-    max-height: 80vh;
-    overflow-y: auto;
-  }
 }
 
 /* Ensure the YouTube player is responsive */
@@ -215,7 +153,6 @@ input:checked + .slider:before {
 /* Improve draggable behavior on touch devices */
 .react-draggable {
   touch-action: none;
-  cursor: move;
 }
 
 /* Ensure the draggable handle is properly styled */
@@ -238,4 +175,52 @@ input:checked + .slider:before {
   margin: auto;
   max-height: 80vh;
   overflow-y: auto;
+}
+
+/* Make the entire window draggable */
+.pomodoro-window,
+.todo-window {
+  cursor: move;
+}
+
+/* Channel sheet scrollable area */
+.channel-sheet-content {
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary) transparent;
+}
+
+.channel-sheet-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.channel-sheet-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.channel-sheet-content::-webkit-scrollbar-thumb {
+  background-color: var(--primary);
+  border-radius: 20px;
+}
+
+/* Task checkbox styling */
+.task-checkbox:checked::after {
+  content: "✓";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 12px;
+}
+
+/* Ensure windows are draggable within viewport */
+main {
+  position: relative;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+.react-draggable {
+  position: absolute !important;
 }

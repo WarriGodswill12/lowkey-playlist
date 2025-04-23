@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import Logo from "@/components/logo"
 import LofiPlayer from "@/components/lofi-player"
 import AppLauncher from "@/components/app-launcher"
@@ -9,11 +9,15 @@ import PomodoroWindow from "@/components/pomodoro-window"
 import TodoWindow from "@/components/todo-window"
 import SettingsPanel from "@/components/settings-panel"
 import ChannelSheet from "@/components/channel-sheet"
+import PlaylistButton from "@/components/playlist-button"
 import type { Settings, Task, List } from "@/types"
 import { channelsList } from "@/data/channels"
 import { Play } from "lucide-react"
 
 export default function Home() {
+  // Create a ref for the container
+  const containerRef = useRef<HTMLDivElement>(null)
+
   // State variables
   const [player, setPlayer] = useState<any>(null)
   const [currentChannel, setCurrentChannel] = useState("M-4zE2GG87w") // Default channel
@@ -250,7 +254,7 @@ export default function Home() {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       // Toggle play/pause with spacebar
-      if (e.code === "Space" && !e.target.matches("input, textarea, [contenteditable]")) {
+      if (e.code === "Space" && !(e.target as HTMLElement).matches("input, textarea, [contenteditable]")) {
         e.preventDefault() // Prevent scrolling
         togglePlay()
       }
@@ -260,13 +264,25 @@ export default function Home() {
     return () => {
       window.removeEventListener("keydown", handleKeyDown)
     }
-  }, [])
+  }, [isPlaying])
 
   return (
-    <main className="min-h-screen">
+    <main className="min-h-screen relative h-screen overflow-hidden" ref={containerRef}>
       {backgroundElements}
 
-      <Logo />
+      {/* Header with Logo and App Launcher */}
+      <div className="fixed top-4 right-4 z-50">
+        <AppLauncher
+          isPomodoroVisible={isPomodoroVisible}
+          isTodoVisible={isTodoVisible}
+          togglePomodoroPanel={togglePomodoroPanel}
+          toggleTodoPanel={toggleTodoPanel}
+        />
+      </div>
+
+      <div className="fixed top-4 left-4 z-50">
+        <Logo />
+      </div>
 
       <LofiPlayer currentChannel={currentChannel} setPlayer={setPlayer} isPlaying={isPlaying} />
 
@@ -279,19 +295,15 @@ export default function Home() {
         </div>
       )}
 
-      <AppLauncher
-        isPomodoroVisible={isPomodoroVisible}
-        isTodoVisible={isTodoVisible}
-        togglePomodoroPanel={togglePomodoroPanel}
-        toggleTodoPanel={toggleTodoPanel}
-      />
+      {/* Playlist Button */}
+      <PlaylistButton onOpenChannelSheet={() => setIsChannelSheetOpen(true)} />
 
+      {/* Now Playing Card */}
       <NowPlayingCard
         currentChannel={currentChannel}
         channelsList={channelsList}
         isPlaying={isPlaying}
         onTogglePlay={togglePlay}
-        onOpenChannelSheet={() => setIsChannelSheetOpen(true)}
       />
 
       <ChannelSheet
