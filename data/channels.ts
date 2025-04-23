@@ -3,38 +3,38 @@ import type { ChannelInfo } from "@/types"
 export const channelsList: ChannelInfo[] = [
   {
     id: "M-4zE2GG87w",
-    title: "Spring Vibes",
+    title: "Spring Lofi",
     icon: "https://img.icons8.com/ios-filled/50/spring.png",
   },
   {
     id: "r3JG5gBLbpA",
     title: "Lost in Japan",
-    icon: "https://img.icons8.com/ios-filled/50/city-buildings.png",
+    icon: "https://img.icons8.com/material-outlined/24/city.png",
   },
   {
     id: "vrB9wC6quaU",
-    title: "Rooftop Rain",
-    icon: "https://img.icons8.com/ios-glyphs/30/rain--v1.png",
+    title: "Lofi on a Calm Night",
+    icon: "https://img.icons8.com/ios/50/balcony.png",
   },
   {
     id: "92PvEVG0sKI",
-    title: "Rooftop in The City",
-    icon: "https://img.icons8.com/ios-filled/50/laptop.png",
+    title: "Cozy Lofi",
+    icon: "https://img.icons8.com/ios-glyphs/30/city-buildings.png",
   },
   {
     id: "hB2LatX6NLg",
     title: "Shibuya Nights",
-    icon: "https://img.icons8.com/ios-filled/50/japan.png",
+    icon: "https://img.icons8.com/glyph-neue/64/new-york.png",
   },
   {
     id: "vYIYIVmOo3Q",
-    title: "Rainy Nights",
+    title: "Rainy Rooftop",
     icon: "https://img.icons8.com/ios-glyphs/30/rain--v1.png",
   },
   {
     id: "CX9_h23icoM",
-    title: "Radio Lofi",
-    icon: "https://img.icons8.com/ios-filled/50/tabletop-radio.png",
+    title: "Lofi on the Radio",
+    icon: "https://img.icons8.com/ios-filled/50/radio.png",
   },
   {
     id: "yf5NOyy1SXU",

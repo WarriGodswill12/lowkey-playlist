@@ -53,12 +53,40 @@ export default function LofiPlayer({ currentChannel, setPlayer, isPlaying }: Lof
         iv_load_policy: 3,
         fs: 0,
         modestbranding: 1,
+        disablekb: 1,
+        cc_load_policy: 0,
+        origin: window.location.origin,
       },
       events: {
         onReady: (event: any) => {
           event.target.playVideo()
           setPlayer(event.target)
           playerInstance.current = event.target
+
+          // Apply custom CSS to hide YouTube elements
+          const iframe = event.target.getIframe()
+          if (iframe) {
+            const iframeDocument = iframe.contentDocument || iframe.contentWindow?.document
+            if (iframeDocument) {
+              const style = iframeDocument.createElement("style")
+              style.textContent = `
+                .ytp-chrome-top,
+                .ytp-chrome-bottom,
+                .ytp-gradient-top,
+                .ytp-gradient-bottom,
+                .ytp-show-cards-title,
+                .ytp-pause-overlay,
+                .ytp-youtube-button,
+                .ytp-watermark {
+                  display: none !important;
+                }
+                .ytp-share-button {
+                  display: block !important;
+                }
+              `
+              iframeDocument.head.appendChild(style)
+            }
+          }
         },
         onStateChange: (event: any) => {
           // If video ends, restart it (for continuous play)
@@ -74,6 +102,12 @@ export default function LofiPlayer({ currentChannel, setPlayer, isPlaying }: Lof
     <>
       <Script src="https://www.youtube.com/iframe_api" strategy="afterInteractive" />
       <div id="lofi-player" ref={playerRef} className="fixed inset-0 w-full h-full pointer-events-none"></div>
+      <style jsx global>{`
+        /* Additional CSS to hide YouTube elements */
+        iframe#lofi-player {
+          opacity: 0.9;
+        }
+      `}</style>
     </>
   )
 }
