@@ -129,6 +129,8 @@ export default function TodoWindow({
     return activeList ? activeList.color : "#9764c7"
   }
 
+  const activeListColor = getActiveListColor()
+
   return (
     <>
       <Draggable nodeRef={nodeRef} bounds="parent" defaultPosition={{ x: 20, y: 20 }}>
@@ -138,7 +140,10 @@ export default function TodoWindow({
         >
           <header className="app-header flex justify-between items-center mb-6 cursor-move">
             <div className="header-left flex items-center cursor-pointer" onClick={() => setIsListsModalOpen(true)}>
-              <div className="w-6 h-6 rounded-full bg-[#9764c7] flex items-center justify-center mr-2">
+              <div
+                className="w-6 h-6 rounded-full flex items-center justify-center mr-2"
+                style={{ backgroundColor: activeListColor }}
+              >
                 <span className="text-xs">{getActiveListName().charAt(0)}</span>
               </div>
               <h1 className="app-title text-base md:text-lg font-medium mr-1 truncate max-w-[100px] md:max-w-[150px]">
@@ -158,21 +163,21 @@ export default function TodoWindow({
             </div>
             <div className="filter-buttons flex gap-1 md:gap-2">
               <button
-                className={`filter-btn bg-transparent border-none text-gray-300 cursor-pointer text-xs py-1 px-1 md:px-2 rounded transition-all duration-200 hover:bg-white/10 ${currentFilter === "all" ? "active bg-purple-500 text-white" : ""}`}
+                className={`filter-btn bg-transparent border-none text-gray-300 cursor-pointer text-xs py-1 px-1 md:px-2 rounded-lg transition-all duration-200 hover:bg-white/10 ${currentFilter === "all" ? "active bg-purple-500 text-white" : ""}`}
                 data-filter="all"
                 onClick={() => onChangeFilter("all")}
               >
                 All
               </button>
               <button
-                className={`filter-btn bg-transparent border-none text-gray-300 cursor-pointer text-xs py-1 px-1 md:px-2 rounded transition-all duration-200 hover:bg-white/10 ${currentFilter === "active" ? "active bg-purple-500 text-white" : ""}`}
+                className={`filter-btn bg-transparent border-none text-gray-300 cursor-pointer text-xs py-1 px-1 md:px-2 rounded-lg transition-all duration-200 hover:bg-white/10 ${currentFilter === "active" ? "active bg-purple-500 text-white" : ""}`}
                 data-filter="active"
                 onClick={() => onChangeFilter("active")}
               >
                 Active
               </button>
               <button
-                className={`filter-btn bg-transparent border-none text-gray-300 cursor-pointer text-xs py-1 px-1 md:px-2 rounded transition-all duration-200 hover:bg-white/10 ${currentFilter === "completed" ? "active bg-purple-500 text-white" : ""}`}
+                className={`filter-btn bg-transparent border-none text-gray-300 cursor-pointer text-xs py-1 px-1 md:px-2 rounded-lg transition-all duration-200 hover:bg-white/10 ${currentFilter === "completed" ? "active bg-purple-500 text-white" : ""}`}
                 data-filter="completed"
                 onClick={() => onChangeFilter("completed")}
               >
@@ -184,7 +189,13 @@ export default function TodoWindow({
             </div>
           </header>
 
-          <div className="todo-container bg-purple-500/10 border border-purple-500/20 rounded-xl p-4 shadow-lg">
+          <div
+            className="todo-container border rounded-xl p-4 shadow-lg"
+            style={{
+              backgroundColor: `${activeListColor}10`,
+              borderColor: `${activeListColor}30`,
+            }}
+          >
             <div className="add-task-container flex mb-6">
               <input
                 type="text"
@@ -197,12 +208,14 @@ export default function TodoWindow({
                     addTask()
                   }
                 }}
-                className="flex-1 py-3 px-4 bg-white/10 border border-purple-500/20 rounded-l-xl text-white text-sm focus:outline-none focus:border-purple-500"
+                className="flex-1 py-3 px-4 bg-white/10 border rounded-l-xl text-white text-sm focus:outline-none"
+                style={{ borderColor: `${activeListColor}30` }}
               />
               <button
                 id="add-task-btn"
                 onClick={addTask}
-                className="bg-purple-500 border-none rounded-r-xl text-white cursor-pointer px-4 transition-colors duration-200 hover:bg-purple-600"
+                className="border-none rounded-r-xl text-white cursor-pointer px-4 transition-colors duration-200"
+                style={{ backgroundColor: activeListColor }}
               >
                 <svg
                   className="icon w-5 h-5"
@@ -235,13 +248,18 @@ export default function TodoWindow({
                   return (
                     <div
                       key={task.id}
-                      className={`task-item flex flex-col py-3 border-b border-purple-500/20 ${task.completed ? "completed" : ""}`}
+                      className={`task-item flex flex-col py-3 border-b ${task.completed ? "completed" : ""}`}
+                      style={{ borderColor: `${activeListColor}20` }}
                       data-id={task.id}
                     >
                       <div className="flex items-center">
                         <input
                           type="checkbox"
-                          className="task-checkbox appearance-none w-5 h-5 border-2 border-purple-500 rounded-full mr-3 cursor-pointer relative flex-shrink-0 checked:bg-purple-500"
+                          className="task-checkbox appearance-none w-5 h-5 border-2 rounded-full mr-3 cursor-pointer relative flex-shrink-0 checked:bg-purple-500"
+                          style={{
+                            borderColor: activeListColor,
+                            backgroundColor: task.completed ? activeListColor : "transparent",
+                          }}
                           checked={task.completed}
                           onChange={() => onToggleTaskCompletion(task.id)}
                         />
@@ -309,13 +327,17 @@ export default function TodoWindow({
               )}
             </div>
 
-            <div className="todo-footer flex justify-between items-center pt-4 border-t border-purple-500/20 text-xs">
+            <div
+              className="todo-footer flex justify-between items-center pt-4 text-xs"
+              style={{ borderTop: `1px solid ${activeListColor}20` }}
+            >
               <span id="tasks-counter" className="text-gray-300">
                 {countActiveTasks()} item{countActiveTasks() !== 1 ? "s" : ""} left
               </span>
               <button
                 id="clear-completed-btn"
-                className="bg-transparent border-none text-gray-300 cursor-pointer text-xs hover:text-purple-500 hover:underline"
+                className="bg-transparent border-none text-gray-300 cursor-pointer text-xs hover:underline"
+                style={{ color: activeListColor }}
                 onClick={onClearCompletedTasks}
               >
                 Clear completed

@@ -47,6 +47,7 @@ export default function LofiPlayer({ currentChannel, setPlayer, isPlaying }: Lof
       playerVars: {
         playsinline: 1,
         autoplay: 1,
+        mute: 1, // Initially mute to allow autoplay
         controls: 0,
         showinfo: 0,
         rel: 0,
@@ -60,6 +61,12 @@ export default function LofiPlayer({ currentChannel, setPlayer, isPlaying }: Lof
       events: {
         onReady: (event: any) => {
           event.target.playVideo()
+          // Unmute after playback has started
+          setTimeout(() => {
+            event.target.unMute()
+            event.target.setVolume(70) // Set to a reasonable volume
+          }, 1000)
+
           setPlayer(event.target)
           playerInstance.current = event.target
 

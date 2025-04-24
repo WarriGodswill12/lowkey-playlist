@@ -55,16 +55,16 @@ export default function ChannelSheet({
         <div className="flex items-center justify-between p-4 border-b border-purple-500/20">
           <h2 className="text-lg font-medium text-white">Lofi Channels</h2>
           <div className="flex items-center gap-4">
-            <div className="flex rounded-lg overflow-hidden border border-purple-500/30">
+            <div className="flex rounded-xl overflow-hidden border border-purple-500/30">
               <button
                 onClick={() => setActiveTab("all")}
-                className={`px-3 py-1 text-sm ${activeTab === "all" ? "bg-purple-500 text-white" : "bg-white/10 text-gray-300"}`}
+                className={`px-4 py-1.5 text-sm rounded-l-xl ${activeTab === "all" ? "bg-purple-500 text-white" : "bg-white/10 text-gray-300"}`}
               >
                 All
               </button>
               <button
                 onClick={() => setActiveTab("favorites")}
-                className={`px-3 py-1 text-sm ${activeTab === "favorites" ? "bg-purple-500 text-white" : "bg-white/10 text-gray-300"}`}
+                className={`px-4 py-1.5 text-sm rounded-r-xl ${activeTab === "favorites" ? "bg-purple-500 text-white" : "bg-white/10 text-gray-300"}`}
               >
                 Favorites
               </button>
@@ -90,7 +90,7 @@ export default function ChannelSheet({
               displayedChannels.map((channel) => (
                 <div
                   key={channel.id}
-                  className={`relative flex flex-col items-center justify-center p-3 rounded-lg transition-all duration-200 ${
+                  className={`relative flex flex-col items-center justify-center p-3 rounded-xl transition-all duration-200 ${
                     currentChannel === channel.id
                       ? "bg-purple-500/30 border border-purple-500/50"
                       : "bg-white/5 border border-white/10 hover:bg-white/10"
@@ -128,7 +128,7 @@ export default function ChannelSheet({
                 onChangeChannel(channelsList[randomIndex].id)
                 onClose()
               }}
-              className="flex flex-col items-center justify-center p-3 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-all duration-200"
+              className="flex flex-col items-center justify-center p-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all duration-200"
             >
               <div className="w-12 h-12 flex items-center justify-center mb-2 rounded-full bg-white/10">
                 <Image width={24} height={24} src="https://img.icons8.com/ios-filled/50/shuffle.png" alt="shuffle" />

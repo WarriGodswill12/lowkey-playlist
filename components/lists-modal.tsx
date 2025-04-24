@@ -75,7 +75,8 @@ export default function ListsModal({
             {lists.map((list) => (
               <div
                 key={list.id}
-                className={`list-item flex items-center p-3 rounded-md cursor-pointer mb-2 transition-colors duration-200 hover:bg-white/10 ${list.id === activeListId ? "active bg-purple-500/20" : ""}`}
+                className={`list-item flex items-center p-3 rounded-lg cursor-pointer mb-2 transition-colors duration-200 hover:bg-white/10 ${list.id === activeListId ? "active" : ""}`}
+                style={{ backgroundColor: list.id === activeListId ? `${list.color}20` : "" }}
                 data-id={list.id}
                 onClick={() => {
                   onChangeActiveList(list.id)
@@ -123,7 +124,7 @@ export default function ListsModal({
               placeholder="Add a new list..."
               value={newListName}
               onChange={(e) => setNewListName(e.target.value)}
-              className="w-full p-3 bg-white/10 border border-purple-500/20 rounded-md text-white text-sm mb-3 focus:outline-none focus:border-purple-500"
+              className="w-full p-3 bg-white/10 border border-purple-500/20 rounded-lg text-white text-sm mb-3 focus:outline-none focus:border-purple-500"
             />
             <div className="color-picker flex justify-start gap-2 mb-3">
               {colorOptions.map((option) => (
@@ -139,7 +140,7 @@ export default function ListsModal({
             </div>
             <button
               id="add-list-btn"
-              className="add-btn w-full p-3 bg-purple-500 text-white border-none rounded-md font-medium cursor-pointer transition-colors duration-200 hover:bg-purple-600"
+              className="add-btn w-full p-3 bg-purple-500 text-white border-none rounded-lg font-medium cursor-pointer transition-colors duration-200 hover:bg-purple-600"
               onClick={handleAddList}
             >
               Add List
