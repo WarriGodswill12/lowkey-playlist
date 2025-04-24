@@ -83,8 +83,10 @@ export default function ListsModal({
                   onClose()
                 }}
               >
-                <div className="list-color w-4 h-4 rounded-full mr-3" style={{ backgroundColor: list.color }}></div>
+                <div className="flex items-center">
+                  <div className="list-color w-4 h-4 rounded-full mr-3" style={{ backgroundColor: list.color }}></div>
                 <div className="list-name flex-1 text-sm">{list.name}</div>
+                </div>
                 <div className="list-options opacity-0 transition-opacity duration-200 group-hover:opacity-100">
                   {list.id !== "default" && (
                     <button
